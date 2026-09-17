@@ -13,9 +13,14 @@ namespace Styx.Workers;
  */
 public sealed class OperatorCustomerWorker : DefaultCustomerWorker
 {
+    private readonly string partitionID;
 
-    private OperatorCustomerWorker(ISellerService sellerService, int numberOfProducts, CustomerWorkerConfig config, Customer customer, HttpClient httpClient, ILogger logger) : base(sellerService, numberOfProducts, config, customer, httpClient, logger)
-    { }
+    private OperatorCustomerWorker(ISellerService sellerService, int numberOfProducts, CustomerWorkerConfig config,
+        Customer customer, HttpClient httpClient, ILogger logger) : base(sellerService, numberOfProducts, config,
+        customer, httpClient, logger)
+    {
+        this.partitionID = this.customer.id.ToString();
+    }
 
     public new static OperatorCustomerWorker BuildCustomerWorker(IHttpClientFactory httpClientFactory, ISellerService sellerService, int numberOfProducts, CustomerWorkerConfig config, Customer customer)
     {
@@ -31,5 +36,4 @@ public sealed class OperatorCustomerWorker : DefaultCustomerWorker
         this.finishedTransactions.Add(new TransactionOutput(tid, DateTime.UtcNow));
         base.DoAfterSuccessSubmission(tid);
     }
-
 }
