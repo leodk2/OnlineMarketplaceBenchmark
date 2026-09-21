@@ -96,7 +96,7 @@ class Program
         catch (Exception e)
         {
             Console.WriteLine("Exception catched. Source: {0}; StackTrace: \n {1}", e.Source, e.StackTrace);
+            throw;
         }
-        Console.WriteLine("Hello, World!");
     }
 }

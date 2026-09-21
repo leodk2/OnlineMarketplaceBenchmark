@@ -14,9 +14,9 @@ public class TransactionMarkDeserializer : IDeserializer<TransactionMark>
         bool isNull,
         SerializationContext context)
     {
-        return isNull
-            ? null!
-            : MessagePackSerializer.Deserialize<TransactionMark>(new ReadOnlySequence<byte>(data.ToArray()));
+        if (isNull)
+            return null!;
+        return MessagePackSerializer.Deserialize<TransactionMark>(new ReadOnlySequence<byte>(data.ToArray()));
     }
 }
 
@@ -47,16 +47,18 @@ public class StyxTransactionMarkConsumer
         {
             BootstrapServers = $"{this.kakfaUrl}:{this.kafkaPort}",
             AutoOffsetReset = AutoOffsetReset.Earliest,
+            GroupId="driver",
         };
+        Console.WriteLine(config.BootstrapServers);
         ConsumerBuilder<byte[], TransactionMark> builder = new ConsumerBuilder<byte[], TransactionMark>(config)
             .SetKeyDeserializer(Deserializers.ByteArray)
             .SetValueDeserializer(new TransactionMarkDeserializer());
         this.consumer = builder.Build();
+        this.consumer.Subscribe(this.kafkaTopic);
     }
 
     public async Task Run(CancellationToken cancellationToken)
     {
-        this.consumer.Subscribe(this.kafkaTopic);
         while (!cancellationToken.IsCancellationRequested)
         {
             ConsumeResult<byte[], TransactionMark> cr = this.consumer.Consume(cancellationToken);

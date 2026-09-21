@@ -11,16 +11,17 @@ namespace Styx.Workload;
 
 public class OperatorExperimentManager : AbstractExperimentManager
 {
-    private CancellationTokenSource source;
+    private CancellationTokenSource _source;
     private readonly List<StyxTransactionMarkConsumer> styxTransactionMarkConsumers;
 
-    private static List<string> styxOutputTopics =
+    private static readonly List<string> _styxOutputTopics =
     [
         "order--OUT",
         "product--OUT",
         "stock--OUT",
         "shipment---OUT",
-        "seller--OUT"
+        "seller--OUT",
+        "cart--OUT"
     ];
 
     public static OperatorExperimentManager BuildOperatorExperimentManager(IHttpClientFactory httpClientFactory,
@@ -51,15 +52,16 @@ public class OperatorExperimentManager : AbstractExperimentManager
         config,
         connection)
     {
-        this.styxTransactionMarkConsumers = new List<StyxTransactionMarkConsumer>();
-        this.source = new CancellationTokenSource();
+        this.styxTransactionMarkConsumers = [];
+        this._source = new CancellationTokenSource();
     }
 
     protected override void PreExperiment()
     {
         base.PreExperiment();
-        foreach (string topic in styxOutputTopics)
+        foreach (string topic in _styxOutputTopics)
         {
+            // New consumer for each styx om output topic
             this.styxTransactionMarkConsumers.Add(new StyxTransactionMarkConsumer(this.config.streamingConfig.host,
                 this.config.streamingConfig.port,
                 topic,
@@ -70,7 +72,7 @@ public class OperatorExperimentManager : AbstractExperimentManager
 
         foreach (StyxTransactionMarkConsumer consumer in this.styxTransactionMarkConsumers)
         {
-            Task.Factory.StartNew(() => consumer.Run(this.source.Token));
+            Task.Factory.StartNew(() => consumer.Run(this._source.Token));
         }
         Console.WriteLine("=== Starting receipt pulling thread ===");
     }
@@ -78,7 +80,7 @@ public class OperatorExperimentManager : AbstractExperimentManager
     public override void PostExperiment()
     {
         base.PostExperiment();
-        this.source.Cancel();
+        this._source.Cancel();
         this.styxTransactionMarkConsumers.Clear();
     }
 }
