@@ -28,12 +28,4 @@ public sealed class OperatorCustomerWorker : DefaultCustomerWorker
         return new OperatorCustomerWorker(sellerService, numberOfProducts, config, customer, httpClientFactory.CreateClient(), logger);
     }
 
-    /**
-     * This method expects the content to contain items belonging to the cart
-     */
-    protected override void DoAfterSuccessSubmission(string tid)
-    {
-        this.finishedTransactions.Add(new TransactionOutput(tid, DateTime.UtcNow));
-        base.DoAfterSuccessSubmission(tid);
-    }
 }

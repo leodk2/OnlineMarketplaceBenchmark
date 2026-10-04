@@ -12,7 +12,7 @@ using Common.Workload.Seller;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace  Styx.Workers;
+namespace Styx.Workers;
 
 public sealed class OperatorSellerWorker : DefaultSellerWorker
 {
@@ -22,14 +22,10 @@ public sealed class OperatorSellerWorker : DefaultSellerWorker
 
     public new static OperatorSellerWorker BuildSellerWorker(int sellerId, IHttpClientFactory httpClientFactory, SellerWorkerConfig workerConfig)
     {
-        var logger = LoggerProxy.GetInstance("Seller_"+ sellerId);
+        var logger = LoggerProxy.GetInstance("Seller_" + sellerId);
         return new OperatorSellerWorker(sellerId, httpClientFactory, workerConfig, logger);
     }
 
-    protected override void DoAfterSuccessUpdate(string tid, TransactionType transactionType)
-    {
-        this.finishedTransactions.Add(new TransactionOutput(tid, DateTime.UtcNow));
-    }
     protected override void SendProductUpdateRequest(Product product, string tid)
     {
         var payLoad = JsonConvert.SerializeObject(product);
@@ -51,6 +47,21 @@ public sealed class OperatorSellerWorker : DefaultSellerWorker
         {
             this.abortedTransactions.Add(new TransactionMark(tid, TransactionType.UPDATE_PRODUCT, this.sellerId, MarkStatus.ABORT, "product"));
             this.logger.LogError("Seller {0} failed to update product {1} version: {2}", this.sellerId, product.product_id, resp.ReasonPhrase);
+        }
+
+    }
+    public override void BrowseDashboard(string tid)
+    {
+        var req = new HttpRequestMessage(HttpMethod.Get, $"{this.config.sellerUrl}/dashboard/{this.sellerId}/{tid}");
+        var resp = HttpUtils.HTTP_CLIENT.Send(req);
+
+        if (resp.IsSuccessStatusCode)
+        {
+            this.submittedTransactions.Add(new TransactionIdentifier(tid, TransactionType.QUERY_DASHBOARD, DateTime.UtcNow));
+        }
+        else
+        {
+            this.abortedTransactions.Add(new TransactionMark(tid, TransactionType.QUERY_DASHBOARD, this.sellerId, MarkStatus.ABORT, "seller"));
         }
 
     }

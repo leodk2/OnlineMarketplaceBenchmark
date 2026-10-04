@@ -19,7 +19,7 @@ public class OperatorExperimentManager : AbstractExperimentManager
         "order--OUT",
         "product--OUT",
         "stock--OUT",
-        "shipment---OUT",
+        "shipment--OUT",
         "seller--OUT",
         "cart--OUT"
     ];
@@ -31,7 +31,7 @@ public class OperatorExperimentManager : AbstractExperimentManager
         return new OperatorExperimentManager(httpClientFactory,
             OperatorSellerWorker.BuildSellerWorker,
             OperatorCustomerWorker.BuildCustomerWorker,
-            DefaultDeliveryWorker.BuildDeliveryWorker,
+            OperatorDeliveryWorker.BuildDeliveryWorker,
             config,
             connection);
     }

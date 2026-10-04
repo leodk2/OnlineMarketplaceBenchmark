@@ -102,7 +102,7 @@ public sealed class DefaultIngestionOrchestrator
         {
             Content = HttpUtils.BuildPayload(JsonConvert.SerializeObject(obj))
         };
-        var response = HttpUtils.HTTP_CLIENT.Send(message, HttpCompletionOption.ResponseHeadersRead);
+        using var response = HttpUtils.HTTP_CLIENT.Send(message, HttpCompletionOption.ResponseHeadersRead);
         if (!response.IsSuccessStatusCode)
         {
             errors.Add((url,response.StatusCode+" : "+response.ReasonPhrase));
