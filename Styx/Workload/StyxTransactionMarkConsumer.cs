@@ -27,7 +27,7 @@ public class TransactionMarkDeserializer : IDeserializer<TransactionMark>
 
         try
         {
-            MessagePackSerializer.Deserialize<TransactionMark>(bytes);
+            return MessagePackSerializer.Deserialize<TransactionMark>(bytes);
         }
         catch (MessagePackSerializationException e)
         {
