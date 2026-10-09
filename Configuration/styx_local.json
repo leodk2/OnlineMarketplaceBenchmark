@@ -1,5 +1,5 @@
 {
-    "connectionString": "DataSource=:memory:", //"Data Source=file.db",  
+    "connectionString": "Data Source=file.db", //"Data Source=file.db",  
     "numCustomers": 10,
     "numProdPerSeller": 10,
     "qtyPerProduct": 10,
