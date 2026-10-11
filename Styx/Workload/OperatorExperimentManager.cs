@@ -31,7 +31,7 @@ public class OperatorExperimentManager : AbstractExperimentManager
         return new OperatorExperimentManager(httpClientFactory,
             OperatorSellerWorker.BuildSellerWorker,
             OperatorCustomerWorker.BuildCustomerWorker,
-            OperatorDeliveryWorker.BuildDeliveryWorker,
+            DefaultDeliveryWorker.BuildDeliveryWorker,
             config,
             connection);
     }
