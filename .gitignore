@@ -2,6 +2,8 @@
 
 .vs
 
+.vscode/
+
 .vs/*
 
 */obj/
@@ -121,3 +123,6 @@ Configuration/results*.txt
 Dapr/*.txt
 
 *.txt
+
+
+docs/

@@ -1,5 +1,5 @@
 {
-    "connectionString": "DataSource=:memory:", //"Data Source=file.db",  
+    "connectionString": "Data Source=file.db", //"Data Source=file.db",  
     "numCustomers": 10,
     "numProdPerSeller": 10,
     "qtyPerProduct": 10,
@@ -57,7 +57,7 @@
         "voucherProbability": 5,
         "productUrl": "http://localhost:3000/api/v1/product",
         "cartUrl": "http://localhost:3000/api/v1/cart",
-        "trackReplication": false,
+        "trackReplication": false
     },
     "sellerWorkerConfig": {
         "delayBetweenRequestsRange": {
