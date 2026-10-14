@@ -1,7 +1,9 @@
 ﻿using Common.Workload;
+using MessagePack;
 
 namespace Common.Streaming;
 
+[MessagePackObject(keyAsPropertyName:true)]
 public class TransactionMark {
 
     public string tid { get; set; }

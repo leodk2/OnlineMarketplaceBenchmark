@@ -33,6 +33,7 @@
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MessagePack" Version="3.1.9" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	<PackageReference Include="Dapper" Version="2.1.4" />
     <PackageReference Include="Bogus" Version="34.0.2" />
