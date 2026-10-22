@@ -76,5 +76,9 @@ public sealed class OperatorSellerWorker : DefaultSellerWorker
             this.logger.LogError("Seller {0}: Dashboard could not be retrieved: {1}", this.sellerId, e);
         }
     }
+    protected override void DoAfterSuccessUpdate(string tid, TransactionType transactionType)
+    {
+        this.finishedTransactions.Add(new TransactionOutput(tid, DateTime.UtcNow));
+    }
 
 }

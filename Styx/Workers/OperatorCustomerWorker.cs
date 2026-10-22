@@ -27,5 +27,10 @@ public sealed class OperatorCustomerWorker : DefaultCustomerWorker
         var logger = LoggerProxy.GetInstance("Customer_" + customer.id.ToString());
         return new OperatorCustomerWorker(sellerService, numberOfProducts, config, customer, httpClientFactory.CreateClient(), logger);
     }
+    protected override void DoAfterSuccessSubmission(string tid)
+    {
+        this.finishedTransactions.Add(new TransactionOutput(tid, DateTime.UtcNow));
+        base.DoAfterSuccessSubmission(tid);
+    }
 
 }

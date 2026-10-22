@@ -17,8 +17,8 @@ public class OperatorExperimentManager : AbstractExperimentManager
         DuckDBConnection connection)
     {
         return new OperatorExperimentManager(httpClientFactory,
-            DefaultSellerWorker.BuildSellerWorker,
-            DefaultCustomerWorker.BuildCustomerWorker,
+            OperatorSellerWorker.BuildSellerWorker,
+            OperatorCustomerWorker.BuildCustomerWorker,
             DefaultDeliveryWorker.BuildDeliveryWorker,
             config,
             connection);
