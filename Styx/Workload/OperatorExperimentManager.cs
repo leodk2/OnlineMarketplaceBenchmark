@@ -3,6 +3,7 @@ using Common.Metric;
 using Common.Services;
 using Common.Workers.Customer;
 using Common.Workers.Delivery;
+using Common.Workers.Seller;
 using Common.Workload;
 using DuckDB.NET.Data;
 using Styx.Workers;
@@ -11,26 +12,13 @@ namespace Styx.Workload;
 
 public class OperatorExperimentManager : AbstractExperimentManager
 {
-    private CancellationTokenSource _source;
-    private readonly List<StyxTransactionMarkConsumer> styxTransactionMarkConsumers;
-
-    private static readonly List<string> _styxOutputTopics =
-    [
-        "order--OUT",
-        "product--OUT",
-        "stock--OUT",
-        "shipment--OUT",
-        "seller--OUT",
-        "cart--OUT"
-    ];
-
     public static OperatorExperimentManager BuildOperatorExperimentManager(IHttpClientFactory httpClientFactory,
         ExperimentConfig config,
         DuckDBConnection connection)
     {
         return new OperatorExperimentManager(httpClientFactory,
-            OperatorSellerWorker.BuildSellerWorker,
-            OperatorCustomerWorker.BuildCustomerWorker,
+            DefaultSellerWorker.BuildSellerWorker,
+            DefaultCustomerWorker.BuildCustomerWorker,
             DefaultDeliveryWorker.BuildDeliveryWorker,
             config,
             connection);
@@ -52,35 +40,6 @@ public class OperatorExperimentManager : AbstractExperimentManager
         config,
         connection)
     {
-        this.styxTransactionMarkConsumers = [];
-        this._source = new CancellationTokenSource();
     }
 
-    protected override void PreExperiment()
-    {
-        base.PreExperiment();
-        foreach (string topic in _styxOutputTopics)
-        {
-            // New consumer for each styx om output topic
-            this.styxTransactionMarkConsumers.Add(new StyxTransactionMarkConsumer(this.config.streamingConfig.host,
-                this.config.streamingConfig.port,
-                topic,
-                this.sellerService,
-                this.customerService,
-                this.deliveryService));
-        }
-
-        foreach (StyxTransactionMarkConsumer consumer in this.styxTransactionMarkConsumers)
-        {
-            Task.Factory.StartNew(() => consumer.Run(this._source.Token));
-        }
-        Console.WriteLine("=== Starting receipt pulling thread ===");
-    }
-
-    public override void PostExperiment()
-    {
-        base.PostExperiment();
-        this._source.Cancel();
-        this.styxTransactionMarkConsumers.Clear();
-    }
 }
