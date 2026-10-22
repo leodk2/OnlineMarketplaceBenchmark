@@ -20,10 +20,10 @@
         "strategy": "WORKER_PER_CPU",
         "concurrencyLevel": 16,
         "mapTableToUrl": {
-            "sellers": "http://orleans:8081/seller",
-            "customers": "http://orleans:8081/customer",
-            "stock_items": "http://orleans:8081/stock",
-            "products": "http://orleans:8081/product"
+            "sellers": "http://10.36.101.236:5001/api/v1/seller",
+            "customers": "http://10.36.101.236:5001/api/v1/customer",
+            "stock_items": "http://10.36.101.236:5001/api/v1/stock",
+            "products": "http://10.36.101.236:5001/api/v1/product"
         }
     },
     "runs": [
@@ -36,10 +36,6 @@
     "postRunTasks": [
     ],
     "postExperimentTasks": [
-        {
-            "name": "cleanup",
-            "url": "http://orleans:8081/cleanup"
-        }
     ],
     "customerWorkerConfig": {
         "minMaxNumItemsRange": {
@@ -56,8 +52,8 @@
         },
         "checkoutProbability": 100,
         "voucherProbability": 5,
-        "productUrl": "http://orleans:8081/product",
-        "cartUrl": "http://orleans:8081/cart",
+        "productUrl": "http://10.36.101.236:5001/api/v1/product",
+        "cartUrl": "http://10.36.101.236:5001/api/v1/cart",
         "trackTids": false
     },
     "sellerWorkerConfig": {
@@ -70,10 +66,10 @@
             "min": 1,
             "max": 10
         },
-        "sellerUrl": "http://orleans:8081/seller",
-        "productUrl": "http://orleans:8081/product"
+        "sellerUrl": "http://10.36.101.236/api/v1/seller",
+        "productUrl": "http://10.36.101.236/api/v1/product"
     },
     "deliveryWorkerConfig": {
-        "shipmentUrl": "http://orleans:8081/shipment"
+        "shipmentUrl": "http://10.36.101.236/api/v1/shipment"
     }
 }
