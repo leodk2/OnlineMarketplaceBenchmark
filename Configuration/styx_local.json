@@ -1,9 +1,9 @@
 {
-    "connectionString": "Data Source=file.db", //"Data Source=file.db",  
+    "connectionString": "DataSource=:memory:", //"Data Source=file.db",  
     "numCustomers": 10,
     "numProdPerSeller": 10,
     "qtyPerProduct": 10,
-    "executionTime": 6000,
+    "executionTime": 60000,
     "epoch": 10000,
     "concurrencyLevel": 10,
     "concurrencyType": "CONTROL",
@@ -21,15 +21,15 @@
         "strategy": "WORKER_PER_CPU",
         "concurrencyLevel": 12,
         "mapTableToUrl": {
-            "sellers": "http://localhost:3000/api/v1/seller",
-            "customers": "http://localhost:3000/api/v1/customer",
-            "stock_items": "http://localhost:3000/api/v1/stock",
-            "products": "http://localhost:3000/api/v1/product"
+            "sellers": "http://localhost:5001/api/v1/seller",
+            "customers": "http://localhost:5001/api/v1/customer",
+            "stock_items": "http://localhost:5001/api/v1/stock",
+            "products": "http://localhost:5001/api/v1/product"
         }
     },
     "runs": [
         {
-            "numProducts": 10,
+            "numProducts": 100,
             "sellerDistribution": "UNIFORM",
             "keyDistribution": "UNIFORM"
             //"sellerDistribution": "ZIPFIAN",
@@ -55,8 +55,8 @@
         },
         "checkoutProbability": 100,
         "voucherProbability": 5,
-        "productUrl": "http://localhost:3000/api/v1/product",
-        "cartUrl": "http://localhost:3000/api/v1/cart",
+        "productUrl": "http://localhost:5001/api/v1/product",
+        "cartUrl": "http://localhost:5001/api/v1/cart",
         "trackReplication": false
     },
     "sellerWorkerConfig": {
@@ -68,11 +68,11 @@
             "min": 1,
             "max": 10
         },
-        "sellerUrl": "http://localhost:3000/api/v1/seller",
-        "productUrl": "http://localhost:3000/api/v1/product"
+        "sellerUrl": "http://localhost:5001/api/v1/seller",
+        "productUrl": "http://localhost:5001/api/v1/product"
     },
     "deliveryWorkerConfig": {
-        "shipmentUrl": "http://localhost:3000/api/v1/shipment"
+        "shipmentUrl": "http://localhost:5001/api/v1/shipment"
     },
     "streamingConfig":{
         "host": "127.0.0.1",
