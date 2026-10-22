@@ -66,10 +66,14 @@
             "min": 1,
             "max": 10
         },
-        "sellerUrl": "http://10.36.101.236/api/v1/seller",
-        "productUrl": "http://10.36.101.236/api/v1/product"
+        "sellerUrl": "http://10.36.101.236:5001/api/v1/seller",
+        "productUrl": "http://10.36.101.236:5001/api/v1/product"
     },
     "deliveryWorkerConfig": {
-        "shipmentUrl": "http://10.36.101.236/api/v1/shipment"
+        "shipmentUrl": "http://10.36.101.236:5001/api/v1/shipment"
+    },
+    "streamingConfig":{
+        "host": "127.0.0.1",
+        "port": 9092
     }
 }
