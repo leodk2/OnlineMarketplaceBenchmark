@@ -52,18 +52,29 @@ public sealed class OperatorSellerWorker : DefaultSellerWorker
     }
     public override void BrowseDashboard(string tid)
     {
-        var req = new HttpRequestMessage(HttpMethod.Get, $"{this.config.sellerUrl}/dashboard/{this.sellerId}/{tid}");
-        var resp = HttpUtils.HTTP_CLIENT.Send(req);
-
-        if (resp.IsSuccessStatusCode)
+        try
         {
-            this.submittedTransactions.Add(new TransactionIdentifier(tid, TransactionType.QUERY_DASHBOARD, DateTime.UtcNow));
+            HttpRequestMessage message = new(HttpMethod.Get, config.sellerUrl + "/dashboard/" + this.sellerId + "/" + tid);
+            message.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            var startTs = DateTime.UtcNow;
+            var response = HttpUtils.HTTP_CLIENT.Send(message);
+            var endTs = DateTime.UtcNow;
+            if (response.IsSuccessStatusCode)
+            {
+                this.finishedTransactions.Add(new TransactionOutput(tid, endTs));
+                this.submittedTransactions.Add(new TransactionIdentifier(tid, TransactionType.QUERY_DASHBOARD, startTs));
+            }
+            else
+            {
+                this.abortedTransactions.Add(new TransactionMark(tid, TransactionType.QUERY_DASHBOARD, this.sellerId, MarkStatus.ABORT, "seller"));
+                this.logger.LogWarning("Seller {0} - {1} - Dashboard retrieval failed: {2}", this.sellerId, startTs, response.ReasonPhrase);
+            }
         }
-        else
+        catch (Exception e)
         {
             this.abortedTransactions.Add(new TransactionMark(tid, TransactionType.QUERY_DASHBOARD, this.sellerId, MarkStatus.ABORT, "seller"));
+            this.logger.LogError("Seller {0}: Dashboard could not be retrieved: {1}", this.sellerId, e);
         }
-
     }
 
 }
