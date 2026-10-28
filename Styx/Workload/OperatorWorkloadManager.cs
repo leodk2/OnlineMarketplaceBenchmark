@@ -34,7 +34,8 @@ public sealed class OperatorWorkloadManager : WorkloadManager
 
     protected override void SubmitTransaction(string tid, TransactionType txType)
     {
-        Task.Run(() => this.RunTransaction(tid, txType), CancellationToken.None);
+        Task.Run(() => this.RunTransaction(tid, txType), CancellationToken.None).
+            ContinueWith(_=>Shared.ResultQueue.Writer.WriteAsync(Shared.ITEM), CancellationToken.None);
     }
 
 }
