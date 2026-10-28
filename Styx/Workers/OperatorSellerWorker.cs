@@ -42,6 +42,8 @@ public sealed class OperatorSellerWorker : DefaultSellerWorker
         if (resp.IsSuccessStatusCode)
         {
             this.submittedTransactions.Add(new TransactionIdentifier(tid, TransactionType.UPDATE_PRODUCT, now));
+            this.DoAfterSuccessUpdate(tid, TransactionType.UPDATE_PRODUCT);
+            
         }
         else
         {
@@ -61,8 +63,8 @@ public sealed class OperatorSellerWorker : DefaultSellerWorker
             var endTs = DateTime.UtcNow;
             if (response.IsSuccessStatusCode)
             {
-                this.finishedTransactions.Add(new TransactionOutput(tid, endTs));
                 this.submittedTransactions.Add(new TransactionIdentifier(tid, TransactionType.QUERY_DASHBOARD, startTs));
+                this.DoAfterSuccessUpdate(tid, TransactionType.QUERY_DASHBOARD);
             }
             else
             {
@@ -79,6 +81,7 @@ public sealed class OperatorSellerWorker : DefaultSellerWorker
     protected override void DoAfterSuccessUpdate(string tid, TransactionType transactionType)
     {
         this.finishedTransactions.Add(new TransactionOutput(tid, DateTime.UtcNow));
+        base.DoAfterSuccessUpdate(tid, transactionType);
     }
 
 }
